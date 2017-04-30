@@ -4,18 +4,16 @@ class ProductTest < ActiveSupport::TestCase
   fixtures :products
 
   test 'product attributes must not be empty' do
-    product = Product.new
-    assert product.invalid?
-    assert product.errors[:title].present?
-    assert product.errors[:description].present?
-    assert product.errors[:price].present?
-    assert product.errors[:image_url].present?
+    blank_product = Product.new
+    assert blank_product.invalid?
+    assert blank_product.errors[:title].present?
+    assert blank_product.errors[:description].present?
+    assert blank_product.errors[:price].present?
+    assert blank_product.errors[:image_url].present?
   end
 
   test 'product price must be positive' do
-    product = Product.new(title:       'Book Title',
-                          description: 'abc',
-                          image_url:   'xyz.jpg')
+    product = products(:ruby)
     product.price = -1
     assert product.invalid?
     assert_equal ['must be greater than or equal to 0.01'], product.errors[:price]
@@ -28,32 +26,38 @@ class ProductTest < ActiveSupport::TestCase
     assert product.valid?
   end
 
-  def new_product(image_url)
-    Product.new(title:       'Book Title',
-                description: 'abc',
-                price:       1,
-                image_url:   image_url)
-  end
-
   test 'image url' do
     ok = %w[fred.gif fred.jpg fred.png FRED.JPG FRED.Jpg http://a.b.c/x/y/z/fred.gif]
     bad = %w[fred.doc fred.gif/more fred.gif.more]
 
+    def product_with_image_url(image_url)
+      product = products(:ruby)
+      product.image_url = image_url
+      product
+    end
+
     ok.each do |url|
-      assert new_product(url).valid?, "#{url} shouldn't be invalid"
+      assert product_with_image_url(url).valid?, "#{url} should be valid"
     end
 
     bad.each do |url|
-      assert new_product(url).invalid?, "#{url} should be invalid"
+      assert product_with_image_url(url).invalid?, "#{url} should be invalid"
     end
   end
 
-  test 'product is not valid without unique title' do
+  test 'product title must be unique' do
     product = Product.new(title:       products(:ruby).title,
                           description: 'abc',
                           price:       1,
                           image_url:   'fred.gif')
     assert product.invalid?
     assert_equal [I18n.translate('errors.messages.taken')], product.errors[:title]
+  end
+
+  test 'product title must be at least 10 characters' do
+    product = products(:ruby)
+    product.title = 'Short'
+    assert product.invalid?
+    assert_equal ['is too short (minimum is 10 characters)'], product.errors[:title]
   end
 end
