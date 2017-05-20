@@ -3,6 +3,8 @@ require 'test_helper'
 class ProductTest < ActiveSupport::TestCase
   fixtures :products
 
+  setup { @product = products(:ruby) }
+
   test 'product attributes must not be empty' do
     blank_product = Product.new
     assert blank_product.invalid?
@@ -13,17 +15,16 @@ class ProductTest < ActiveSupport::TestCase
   end
 
   test 'product price must be positive' do
-    product = products(:ruby)
-    product.price = -1
-    assert product.invalid?
-    assert_equal ['must be greater than or equal to 0.01'], product.errors[:price]
+    @product.price = -1
+    assert @product.invalid?
+    assert_equal ['must be greater than or equal to 0.01'], @product.errors[:price]
 
-    product.price = 0
-    assert product.invalid?
-    assert_equal ['must be greater than or equal to 0.01'], product.errors[:price]
+    @product.price = 0
+    assert @product.invalid?
+    assert_equal ['must be greater than or equal to 0.01'], @product.errors[:price]
 
-    product.price = 1
-    assert product.valid?
+    @product.price = 1
+    assert @product.valid?
   end
 
   test 'image url' do
@@ -31,9 +32,8 @@ class ProductTest < ActiveSupport::TestCase
     bad = %w[fred.doc fred.gif/more fred.gif.more]
 
     def product_with_image_url(image_url)
-      product = products(:ruby)
-      product.image_url = image_url
-      product
+      @product.image_url = image_url
+      @product
     end
 
     ok.each do |url|
@@ -55,9 +55,8 @@ class ProductTest < ActiveSupport::TestCase
   end
 
   test 'product title must be at least 10 characters' do
-    product = products(:ruby)
-    product.title = 'Short'
-    assert product.invalid?
-    assert_equal ['is too short (minimum is 10 characters)'], product.errors[:title]
+    @product.title = 'Short'
+    assert @product.invalid?
+    assert_equal ['is too short (minimum is 10 characters)'], @product.errors[:title]
   end
 end
