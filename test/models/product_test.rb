@@ -1,8 +1,6 @@
 require 'test_helper'
 
 class ProductTest < ActiveSupport::TestCase
-  fixtures :products
-
   setup { @product = products(:ruby) }
 
   test 'product attributes must not be empty' do
@@ -58,5 +56,12 @@ class ProductTest < ActiveSupport::TestCase
     @product.title = 'Short'
     assert @product.invalid?
     assert_equal ['is too short (minimum is 10 characters)'], @product.errors[:title]
+  end
+
+  test 'product that is in a cart cannot be destroyed' do
+    product = products(:one)
+    assert product.line_items.present?
+    assert_not product.destroy
+    assert product.errors[:base].include? 'Line Items present'
   end
 end
