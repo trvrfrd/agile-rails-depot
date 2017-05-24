@@ -21,8 +21,8 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to cart_url(LineItem.last.cart)
     follow_redirect!
-    assert_select 'h2', 'Your Pragmatic Cart'
-    assert_select 'li', "1 \u00d7 #{products(:ruby).title}"
+    assert_select 'h2', 'Your Cart'
+    assert_select 'td', products(:ruby).title
   end
 
   test "should show line_item" do
