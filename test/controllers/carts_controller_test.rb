@@ -26,6 +26,12 @@ class CartsControllerTest < ActionDispatch::IntegrationTest
   test "should show cart" do
     get cart_url(@cart)
     assert_response :success
+    assert_select 'h2', 'Your Cart'
+    @cart.line_items.each do |item|
+      assert_select 'td', item.product.title
+      # Remove from Cart button
+      assert_select %(form[action="#{line_item_path(item)}"])
+    end
   end
 
   test "should redirect rather than throw error when showing invalid cart id" do

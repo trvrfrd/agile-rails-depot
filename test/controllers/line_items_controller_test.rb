@@ -20,9 +20,6 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
       post line_items_url, params: { product_id: products(:ruby).id }
     end
     assert_redirected_to cart_url(LineItem.last.cart)
-    follow_redirect!
-    assert_select 'h2', 'Your Cart'
-    assert_select 'td', products(:ruby).title
   end
 
   test "should show line_item" do
@@ -45,6 +42,6 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
       delete line_item_url(@line_item)
     end
 
-    assert_redirected_to line_items_url
+    assert_redirected_to cart_url(@line_item.cart)
   end
 end
