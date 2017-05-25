@@ -28,6 +28,11 @@ class CartsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should redirect rather than throw error when showing invalid cart id" do
+    get cart_url(id: "I'm doing something malicious")
+    assert_redirected_to store_index_url
+  end
+
   test "should get edit" do
     get edit_cart_url(@cart)
     assert_response :success
