@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<% if session[:visit_count] > 5 %>
+<% if session[:visit_count] && session[:visit_count] > 5 %>
   <span>You've been here <%= pluralize(session[:visit_count], "time") %></span>
 <% end %>
 

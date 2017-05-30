@@ -54,4 +54,7 @@ Rails.application.configure do
 
   # Allow web console on Vagrant dev server
   config.web_console.whitelisted_ips = '10.0.2.2'
+
+  # Allow ActionCable on Vagrant dev server
+  config.action_cable.disable_request_forgery_protection = true
 end
