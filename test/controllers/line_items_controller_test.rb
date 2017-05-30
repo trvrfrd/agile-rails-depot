@@ -19,7 +19,7 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     assert_difference('LineItem.count') do
       post line_items_url, params: { product_id: products(:ruby).id }
     end
-    assert_redirected_to cart_url(LineItem.last.cart)
+    assert_redirected_to store_index_url
   end
 
   test "should show line_item" do
@@ -42,6 +42,6 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
       delete line_item_url(@line_item)
     end
 
-    assert_redirected_to cart_url(@line_item.cart)
+    assert_redirected_to store_index_url
   end
 end

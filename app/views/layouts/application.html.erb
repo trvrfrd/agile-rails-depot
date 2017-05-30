@@ -15,6 +15,9 @@
     <div id="columns">
       <div id="side">
         <%= time_tag(Time.now) %>
+        <div id="cart">
+          <%= render @cart if @cart %>
+        </div>
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="#faq">Questions</a></li>
