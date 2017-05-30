@@ -1,8 +1,12 @@
-    <tr>
-      <td><%= line_item.quantity %> &times;</td>
-      <td><%= line_item.product.title %></td>
-      <td class="item-price"><%= number_to_currency(line_item.total_price) %></td>
-      <td>
-        <%= button_to 'Remove from Cart', line_item, method: :delete, data: { confirm: 'Are you sure?' } %>
-      </td>
-    </tr>
+<% if line_item == @current_item %>
+<tr id="current-item">
+<% else %>
+<tr>
+<% end %>
+  <td><%= line_item.quantity %> &times;</td>
+  <td><%= line_item.product.title %></td>
+  <td class="item-price"><%= number_to_currency(line_item.total_price) %></td>
+  <td>
+    <%= button_to 'Remove from Cart', line_item, method: :delete, data: { confirm: 'Are you sure?' } %>
+  </td>
+</tr>
