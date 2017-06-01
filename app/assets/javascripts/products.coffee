@@ -9,3 +9,6 @@ App.products = App.cable.subscriptions.create 'ProductsChannel',
     # Called when the subscription has been terminated by the server
   received: (data) ->
     $('.store #main').html(data.html)
+    $('.updated-product')
+      .css({'background-color': '#8f8'})
+      .animate({'background-color': 'white'}, 1000);
