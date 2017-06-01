@@ -5,6 +5,13 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     @line_item = line_items(:one)
   end
 
+  def setup_ui_test
+    # janky(?) way to set up the session so we have a cart with stuff to display
+    post line_items_url, params: { product_id: products(:ruby).id }
+    @line_item = LineItem.last
+    get store_index_url
+  end
+
   test "should get index" do
     get line_items_url
     assert_response :success
@@ -55,12 +62,11 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should decrement line_item quantity via ajax' do
-    # janky(?) way to set up the session so we have a cart with stuff to display
-    post line_items_url, params: { product_id: products(:ruby).id }
-    @line_item = LineItem.last
+    setup_ui_test
     @line_item.update(quantity: 70)
 
     patch decrement_line_item_url(@line_item), xhr: true
+    assert_response :success
     assert_select_jquery :html, '#cart' do
       # 00d7 == multiplication sign
       assert_select 'tr#current-item td', "69 \u00d7"
@@ -81,5 +87,17 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
       delete line_item_url(@line_item)
     end
     assert_redirected_to store_index_url
+  end
+
+  test 'should destroy line_item via ajax' do
+    setup_ui_test
+    assert_select 'td', text: products(:ruby).title, count: 1
+    assert_difference('LineItem.count', -1) do
+      delete line_item_url(@line_item), xhr: true
+    end
+    assert_response :success
+    assert_select_jquery :html, '#cart' do
+      assert_select 'td', text: products(:ruby).title, count: 0
+    end
   end
 end

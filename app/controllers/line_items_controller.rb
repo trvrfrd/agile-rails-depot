@@ -2,7 +2,7 @@ class LineItemsController < ApplicationController
   include CurrentCart
 
   before_action :set_line_item, only: [:show, :edit, :update, :destroy, :decrement]
-  before_action :set_cart, only: [:create, :decrement]
+  before_action :set_cart, only: [:create, :destroy, :decrement]
 
   # GET /line_items
   # GET /line_items.json
@@ -73,6 +73,7 @@ class LineItemsController < ApplicationController
     @line_item.destroy
     respond_to do |format|
       format.html { redirect_to store_index_url, notice: 'Item removed from cart.' }
+      format.js {}
       format.json { head :no_content }
     end
   end
