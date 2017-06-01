@@ -7,6 +7,9 @@
   <td><%= line_item.product.title %></td>
   <td class="item-price"><%= number_to_currency(line_item.total_price) %></td>
   <td>
-    <%= button_to 'Remove from Cart', line_item, method: :delete, data: { confirm: 'Are you sure?' } %>
+    <%= button_to '-', decrement_line_item_url(line_item), method: :patch, remote: true %>
+  </td>
+  <td>
+    <%= button_to 'x', line_item, method: :delete, data: { confirm: 'Are you sure?' } %>
   </td>
 </tr>

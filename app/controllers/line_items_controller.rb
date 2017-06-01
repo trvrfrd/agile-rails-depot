@@ -1,8 +1,8 @@
 class LineItemsController < ApplicationController
   include CurrentCart
 
-  before_action :set_line_item, only: [:show, :edit, :update, :destroy]
-  before_action :set_cart, only: [:create]
+  before_action :set_line_item, only: [:show, :edit, :update, :destroy, :decrement]
+  before_action :set_cart, only: [:create, :decrement]
 
   # GET /line_items
   # GET /line_items.json
@@ -54,6 +54,16 @@ class LineItemsController < ApplicationController
         format.html { render :edit }
         format.json { render json: @line_item.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  # PATCH/PUT /line_items/1/decrement
+  def decrement
+    @line_item.quantity -= 1
+    @line_item.quantity <= 0 ? @line_item.destroy : @line_item.save
+    respond_to do |format|
+      format.html { redirect_to store_index_url, notice: 'Item quantity updated.'}
+      format.js { @current_item = @line_item }
     end
   end
 

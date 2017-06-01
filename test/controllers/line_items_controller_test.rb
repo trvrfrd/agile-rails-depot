@@ -47,11 +47,39 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to line_item_url(@line_item)
   end
 
+  test 'should decrement line_item quantity' do
+    @line_item.update(quantity: 2)
+    patch decrement_line_item_url(@line_item)
+    assert_equal 1, @line_item.reload.quantity
+    assert_redirected_to store_index_url
+  end
+
+  test 'should decrement line_item quantity via ajax' do
+    # janky(?) way to set up the session so we have a cart with stuff to display
+    post line_items_url, params: { product_id: products(:ruby).id }
+    @line_item = LineItem.last
+    @line_item.update(quantity: 70)
+
+    patch decrement_line_item_url(@line_item), xhr: true
+    assert_select_jquery :html, '#cart' do
+      # 00d7 == multiplication sign
+      assert_select 'tr#current-item td', "69 \u00d7"
+      assert_select 'tr#current-item td', products(:ruby).title
+    end
+  end
+
+  test 'should destroy line_item when decrementing quantity to 0' do
+    # fixture's quantity/default quantity is 1
+    assert_difference('LineItem.count', -1) do
+      patch decrement_line_item_url(@line_item)
+    end
+    assert_redirected_to store_index_url
+  end
+
   test "should destroy line_item" do
     assert_difference('LineItem.count', -1) do
       delete line_item_url(@line_item)
     end
-
     assert_redirected_to store_index_url
   end
 end
