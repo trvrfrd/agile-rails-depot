@@ -1,6 +1,7 @@
 class LineItem < ApplicationRecord
+  belongs_to :order, optional: true
   belongs_to :product
-  belongs_to :cart
+  belongs_to :cart, optional: true
 
   # New LineItems are mostly created via Cart#add_product, which also sets the
   # price from the associated Product. This is just an extra line of defense.

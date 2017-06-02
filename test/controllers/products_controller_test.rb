@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ProductsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @product = products(:ruby)
+    @product = products(:two)
     @update_params = {
       title:       'Lorem Ipsum',
       description: 'bingo bango',
