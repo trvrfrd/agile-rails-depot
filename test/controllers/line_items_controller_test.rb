@@ -5,8 +5,8 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     @line_item = line_items(:one)
   end
 
-  def setup_ui_test
-    # janky(?) way to set up the session so we have a cart with stuff to display
+  def setup_cart
+    # janky(?) way to set up the session so we have a cart to work with
     post line_items_url, params: { product_id: products(:ruby).id }
     @line_item = LineItem.last
     get store_index_url
@@ -62,7 +62,7 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should decrement line_item quantity via ajax' do
-    setup_ui_test
+    setup_cart
     @line_item.update(quantity: 70)
 
     patch decrement_line_item_url(@line_item), xhr: true
@@ -90,7 +90,7 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should destroy line_item via ajax' do
-    setup_ui_test
+    setup_cart
     assert_select 'td', text: products(:ruby).title, count: 1
     assert_difference('LineItem.count', -1) do
       delete line_item_url(@line_item), xhr: true

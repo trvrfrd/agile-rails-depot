@@ -5,6 +5,12 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
     @order = orders(:one)
   end
 
+  def setup_cart
+    # janky(?) way to set up the session so we have a cart to work with
+    post line_items_url, params: { product_id: products(:ruby).id }
+    get store_index_url
+  end
+
   test "should get index" do
     get orders_url
     assert_response :success
@@ -23,7 +29,16 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should create order" do
+  test "should not create order without item in cart" do
+    assert_no_difference('Order.count') do
+      post orders_url, params: { order: { address: @order.address, email: @order.email, name: @order.name, pay_type: @order.pay_type } }
+    end
+
+    assert_response :success
+  end
+
+  test "should create order with item in cart" do
+    setup_cart
     assert_difference('Order.count') do
       post orders_url, params: { order: { address: @order.address, email: @order.email, name: @order.name, pay_type: @order.pay_type } }
     end

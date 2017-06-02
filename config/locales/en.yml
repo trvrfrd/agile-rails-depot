@@ -21,3 +21,13 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    attributes:
+      order:
+        line_items: "Your cart"
+    errors:
+      models:
+        order:
+          attributes:
+            line_items:
+              blank: "is empty"
