@@ -1,6 +1,10 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
+  rescue_from User::Error do |exception|
+    redirect_to users_url, notice: exception.message
+  end
+
   # GET /users
   # GET /users.json
   def index
