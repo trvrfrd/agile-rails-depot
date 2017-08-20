@@ -5,6 +5,7 @@ class StoreController < ApplicationController
   before_action :set_cart
 
   def index
+    redirect_to store_index_url(locale: params[:set_locale]) and return if params[:set_locale]
     session[:visit_count] ||= 0
     session[:visit_count] += 1
     @products = Product.order(:title)
