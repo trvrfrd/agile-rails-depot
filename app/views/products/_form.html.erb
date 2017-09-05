@@ -31,6 +31,11 @@
     <%= f.text_field :price %>
   </div>
 
+  <div class="field">
+    <%= f.label :locale %>
+    <%= f.select :locale, I18n.available_locales %>
+  </div>
+
   <div class="actions">
     <%= f.submit %>
   </div>

@@ -11,6 +11,10 @@ class Product < ApplicationRecord
     with:    /\.(gif|jpg|png)\Z/i,
     message: 'must be a URL for GIF, JPG, or PNG image.'
   }
+  validates :locale,
+            # defaults to 'en' at DB level
+            allow_nil: true,
+            inclusion: { in: I18n.available_locales.map(&:to_s) }
 
   private
 

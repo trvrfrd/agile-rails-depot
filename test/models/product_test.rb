@@ -64,4 +64,12 @@ class ProductTest < ActiveSupport::TestCase
     assert_not product.destroy
     assert product.errors[:base].include? 'Line Items present'
   end
+
+  test 'product locale must be an available locale' do
+    bogus_locale = 'xx'
+    assert_not I18n.available_locales.map(&:to_s).include?(bogus_locale)
+    @product.locale = bogus_locale
+    assert @product.invalid?
+    assert_equal ['is not included in the list'], @product.errors[:locale]
+  end
 end
