@@ -6,7 +6,7 @@ domain = 'depot.rails.prod'
 
 set :application, 'depot'
 
-set :repo_url, "ssh://#{user}@#{domain}:2200/home/#{user}/git/#{fetch(:application)}.git"
+set :repo_url, "ssh://#{user}@#{domain}/home/#{user}/git/#{fetch(:application)}.git"
 set :deploy_to, "/home/#{user}/deploy/#{fetch(:application)}"
 
 # domains for various servers (in this case all are on the same machine)
