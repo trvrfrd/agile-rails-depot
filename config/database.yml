@@ -20,12 +20,5 @@ test:
   <<: *default
   database: db/test.sqlite3
 
-production:
-  <<: *default
-  adapter: mysql2
-  encoding: utf8
-  reconnect: false
-  database: depot_production
-  username: root
-  password: root
-  host: localhost
+# We should keep production db config a secret!
+# so it's stored elsewhere and copied over on deployment
